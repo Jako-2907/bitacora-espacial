@@ -31,13 +31,14 @@
 
   .introduccion {
     max-width: 48rem;
-    padding-block: clamp(3rem, 9vw, 6rem);
+    padding-block: clamp(2rem, 5vw, 3rem) clamp(2rem, 5vw, 3rem);
   }
 
   .introduccion h1 {
     margin-bottom: 0.75rem;
-    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-size: clamp(2.15rem, 6vw, 4rem);
     line-height: 1.15;
+    letter-spacing: -0.035em;
   }
 
   .introduccion > p {
@@ -45,7 +46,7 @@
   }
 
   .buscador {
-    margin-top: 2rem;
+    margin-top: 2.75rem;
   }
 
   .buscador label {
@@ -57,14 +58,20 @@
   .buscador__fila {
     display: flex;
     gap: 0.6rem;
+    max-width: 46rem;
+  }
+
+  .buscador input,
+  .buscador button {
+    min-height: 3.5rem;
   }
 
   .buscador input {
     flex: 1;
     min-width: 0;
-    padding: 0.7rem 0.85rem;
+    padding: 1rem 1.1rem;
     border: 1px solid var(--color-borde);
-    border-radius: 0.4rem;
+    border-radius: 0.65rem;
     color: var(--color-texto);
     background: var(--color-superficie);
   }
@@ -74,9 +81,9 @@
   }
 
   .buscador button {
-    padding: 0.7rem 1.1rem;
+    padding: 1rem 1.5rem;
     border: 0;
-    border-radius: 0.4rem;
+    border-radius: 0.65rem;
     color: var(--color-fondo);
     background: var(--color-acento);
     cursor: pointer;
@@ -87,9 +94,44 @@
     background: var(--color-acento-claro);
   }
 
+  .busquedas-sugeridas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1rem;
+    color: var(--color-texto-suave);
+  }
+
+  .busquedas-sugeridas button {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 0.65rem;
+    color: var(--color-acento);
+    background: transparent;
+    cursor: pointer;
+    font-weight: 650;
+  }
+
+  .busquedas-sugeridas button:hover {
+    background: var(--color-superficie);
+  }
+
+  .noticias-encabezado {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .noticias-encabezado > span {
+    color: var(--color-texto-suave);
+  }
+
   #noticias h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+    margin: 0;
+    font-size: 1.6rem;
   }
 
   .estado {
@@ -113,7 +155,8 @@
 
   .grid-noticias {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
     gap: 1.25rem;
     padding-block: 0.5rem 3rem;
   }
@@ -125,6 +168,12 @@
     font-size: var(--texto-pequeno);
   }
 
+  @media (max-width: 900px) {
+    .grid-noticias {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 520px) {
     .cabecera {
       align-items: flex-start;
@@ -132,6 +181,23 @@
     }
 
     .buscador__fila {
+      flex-direction: column;
+    }
+
+    .buscador button {
+      width: 100%;
+    }
+
+    .grid-noticias {
+      grid-template-columns: 1fr;
+    }
+
+    .salto-introduccion {
+      display: none;
+    }
+
+    .noticias-encabezado {
+      align-items: flex-start;
       flex-direction: column;
     }
   }

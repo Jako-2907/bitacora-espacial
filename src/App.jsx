@@ -8,6 +8,7 @@ function App() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
   const [termino, setTermino] = useState('')
+  const [textoBusqueda, setTextoBusqueda] = useState('')
   const [intento, setIntento] = useState(0)
 
   useEffect(() => {
@@ -46,6 +47,7 @@ function App() {
   function buscar(evento) {
     evento.preventDefault()
     const texto = new FormData(evento.currentTarget).get('q')?.toString().trim() ?? ''
+    setTextoBusqueda(texto)
     setTermino(texto)
   }
 
@@ -55,14 +57,14 @@ function App() {
         <a className="marca" href="#inicio">Bitácora Espacial</a>
         <nav aria-label="Principal">
           <a href="#noticias">Noticias</a>
-          <a href="#acerca">Acerca del proyecto</a>
+          <a href="#acerca">Acerca de esta demo</a>
         </nav>
       </header>
 
       <main className="contenedor" id="inicio">
         <section className="introduccion">
-          <h1>Noticias de exploración espacial</h1>
-          <p>Encuentra novedades sobre misiones, ciencia y exploración del espacio.</p>
+          <h1>Explora las noticias del espacio</h1>
+          <p>Misiones, descubrimientos y próximos destinos. Encuentra un tema y<br className="salto-introduccion" /> sigue explorando.</p>
 
           <form className="buscador" onSubmit={buscar} role="search">
             <label htmlFor="busqueda">Buscar por tema</label>
@@ -72,14 +74,29 @@ function App() {
                 name="q"
                 type="search"
                 placeholder="Ej.: Mars, Artemis, SpaceX"
+                value={textoBusqueda}
+                onChange={(evento) => setTextoBusqueda(evento.target.value)}
               />
               <button type="submit">Buscar</button>
             </div>
           </form>
+          <div className="busquedas-sugeridas" aria-label="Búsquedas sugeridas">
+            <span>Prueba la búsqueda:</span>
+            {['Mars', 'Artemis', 'SpaceX', 'Ver todas'].map((sugerencia) => (
+              <button key={sugerencia} type="button" onClick={() => {
+                const valor = sugerencia === 'Ver todas' ? '' : sugerencia
+                setTextoBusqueda(valor)
+                setTermino(valor)
+              }}>{sugerencia}</button>
+            ))}
+          </div>
         </section>
 
         <section aria-labelledby="titulo-noticias" id="noticias">
-          <h2 id="titulo-noticias">Últimas noticias</h2>
+          <div className="noticias-encabezado">
+            <h2 id="titulo-noticias">Últimas noticias {termino ? `sobre ${termino}` : 'de la muestra'}</h2>
+            {!cargando && !error && <span>{noticias.length} noticias</span>}
+          </div>
           {cargando && <p className="estado" role="status">Cargando noticias…</p>}
           {error && (
             <p className="estado estado--error" role="alert">
@@ -96,7 +113,7 @@ function App() {
           )}
 
           <div className="grid-noticias">
-            {noticias.map((noticia) => (
+            {noticias.map((noticia, index) => (
               <NoticiaCard
                 key={noticia.id}
                 titulo={noticia.title}
@@ -105,6 +122,7 @@ function App() {
                 fuente={noticia.news_site}
                 fecha={noticia.published_at}
                 enlace={noticia.url}
+                prioridadImagen={index === 0}
               />
             ))}
           </div>
@@ -112,7 +130,7 @@ function App() {
       </main>
 
       <footer className="contenedor pie" id="acerca">
-        <p>Bitácora Espacial · Noticias de <a href="https://api.spaceflightnewsapi.net/v4/docs/">Spaceflight News API</a></p>
+        <p>Noticias de <a href="https://api.spaceflightnewsapi.net/v4/docs/">Spaceflight News API</a></p>
       </footer>
     </>
   )

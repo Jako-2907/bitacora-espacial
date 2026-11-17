@@ -19,12 +19,16 @@
 @layer base {
   body {
     min-height: 100vh;
-    padding: 1.5rem;
+    padding: clamp(0.75rem, 3vw, 1.5rem);
     color: var(--color-texto);
     background: var(--color-fondo);
     font-family: var(--fuente-base);
     font-size: var(--texto-base);
     line-height: 1.6;
+  }
+
+  img {
+    max-width: 100%;
   }
 
   a {
