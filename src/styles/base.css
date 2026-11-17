@@ -10,6 +10,7 @@
   body,
   h1,
   h2,
+  h3,
   p {
     margin: 0;
   }
@@ -17,37 +18,32 @@
 
 @layer base {
   body {
+    min-height: 100vh;
+    padding: 1.5rem;
+    color: var(--color-texto);
+    background: var(--color-fondo);
     font-family: var(--fuente-base);
     font-size: var(--texto-base);
     line-height: 1.6;
-    color: var(--color-texto);
-    background-color: var(--color-fondo);
-    min-height: 100dvh;
-    padding: var(--espacio-4);
-  }
-
-  h1 {
-    font-size: clamp(1.75rem, 1rem + 4vw, 3rem);
-    line-height: 1.2;
-    margin-block-end: var(--espacio-3);
-  }
-
-  h2 {
-    font-size: var(--texto-medio);
-    margin-block-end: var(--espacio-2);
-  }
-
-  p {
-    max-width: 65ch;
-    color: var(--color-texto-suave);
   }
 
   a {
     color: var(--color-acento);
   }
 
+  button,
+  input {
+    font: inherit;
+  }
+
   :focus-visible {
-    outline: 3px solid var(--color-acento);
+    outline: 2px solid var(--color-acento);
     outline-offset: 3px;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 1rem;
+    }
   }
 }

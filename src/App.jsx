@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import NoticiaCard from './components/NoticiaCard/NoticiaCard.jsx'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = (import.meta.env.VITE_API_URL || 'https://api.spaceflightnewsapi.net/v4').replace(/\/$/, '')
 
 function App() {
   const [noticias, setNoticias] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
-  const [termino, setTermino] = useState("")
+  const [termino, setTermino] = useState('')
+  const [intento, setIntento] = useState(0)
 
   useEffect(() => {
     const controlador = new AbortController()
@@ -17,10 +18,8 @@ function App() {
       setError(null)
 
       try {
-        const parametros = new URLSearchParams({ limit: 12 })
-        if (termino) {
-          parametros.set('search', termino)
-        }
+        const parametros = new URLSearchParams({ limit: '12' })
+        if (termino) parametros.set('search', termino)
 
         const respuesta = await fetch(`${API_URL}/articles/?${parametros}`, {
           signal: controlador.signal,
@@ -31,60 +30,69 @@ function App() {
         }
 
         const datos = await respuesta.json()
-        setNoticias(datos.results)
+        setNoticias(Array.isArray(datos.results) ? datos.results : [])
       } catch (err) {
         if (err.name === 'AbortError') return
-        setError('No se pudieron cargar las noticias. Intenta de nuevo más tarde.')
+        setError('No se pudieron cargar las noticias. Comprueba tu conexión e inténtalo de nuevo.')
       } finally {
-        if (!controlador.signal.aborted) {
-          setCargando(false)
-        }
+        if (!controlador.signal.aborted) setCargando(false)
       }
     }
 
     cargarNoticias()
-
     return () => controlador.abort()
-  }, [termino])
+  }, [termino, intento])
 
   function buscar(evento) {
     evento.preventDefault()
-    const texto = new FormData(evento.currentTarget).get('q')
-    setTermino(texto.trim())
+    const texto = new FormData(evento.currentTarget).get('q')?.toString().trim() ?? ''
+    setTermino(texto)
   }
 
   return (
     <>
       <header className="contenedor cabecera">
-        <p>Bitácora Espacial</p>
+        <a className="marca" href="#inicio">Bitácora Espacial</a>
         <nav aria-label="Principal">
           <a href="#noticias">Noticias</a>
-          <a href="#blogs">Blogs</a>
-          <a href="#acerca">Acerca</a>
+          <a href="#acerca">Acerca del proyecto</a>
         </nav>
       </header>
 
-      <main className="contenedor">
-        <h1>Noticias de exploración espacial</h1>
+      <main className="contenedor" id="inicio">
+        <section className="introduccion">
+          <h1>Noticias de exploración espacial</h1>
+          <p>Encuentra novedades sobre misiones, ciencia y exploración del espacio.</p>
 
-        <form className="buscador" onSubmit={buscar}>
-          <label htmlFor="busqueda">Buscar por tema</label>
-          <input
-            id="busqueda"
-            name="q"
-            type="search"
-            placeholder="Ej.: Mars, Artemis, SpaceX"
-          />
-          <button type="submit">Buscar</button>
-        </form>
+          <form className="buscador" onSubmit={buscar} role="search">
+            <label htmlFor="busqueda">Buscar por tema</label>
+            <div className="buscador__fila">
+              <input
+                id="busqueda"
+                name="q"
+                type="search"
+                placeholder="Ej.: Mars, Artemis, SpaceX"
+              />
+              <button type="submit">Buscar</button>
+            </div>
+          </form>
+        </section>
 
         <section aria-labelledby="titulo-noticias" id="noticias">
           <h2 id="titulo-noticias">Últimas noticias</h2>
-
-          {cargando && <p role="status">Cargando noticias…</p>}
-          {error && <p role="alert">{error}</p>}
+          {cargando && <p className="estado" role="status">Cargando noticias…</p>}
+          {error && (
+            <p className="estado estado--error" role="alert">
+              {error}{' '}
+              <button className="boton-reintentar" type="button" onClick={() => setIntento((valor) => valor + 1)}>
+                Reintentar
+              </button>
+            </p>
+          )}
           {!cargando && !error && noticias.length === 0 && (
-            <p role="status">No hay noticias para "{termino}".</p>
+            <p className="estado" role="status">
+              {termino ? `No hay noticias para “${termino}”.` : 'No hay noticias disponibles por el momento.'}
+            </p>
           )}
 
           <div className="grid-noticias">
@@ -103,8 +111,8 @@ function App() {
         </section>
       </main>
 
-      <footer className="contenedor">
-        <p>Datos: Spaceflight News API</p>
+      <footer className="contenedor pie" id="acerca">
+        <p>Bitácora Espacial · Noticias de <a href="https://api.spaceflightnewsapi.net/v4/docs/">Spaceflight News API</a></p>
       </footer>
     </>
   )

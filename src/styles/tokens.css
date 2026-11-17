@@ -1,25 +1,30 @@
 :root {
-  /* colores */
-  --color-fondo: #0b1d3a;
-  --color-superficie: #13284d;
-  --color-texto: #f1f4fa;
-  --color-texto-suave: #b8c3d9;
-  --color-acento: #ffb347;
+  /* Colores de fondo, superficies, texto y énfasis. */
+  --color-fondo: #071426;
+  --color-superficie: #10233d;
+  --color-superficie-hover: #142b49;
+  --color-texto: #f4f7fb;
+  --color-texto-suave: #bdc9d8;
+  --color-texto-tenue: #8496ad;
+  --color-acento: #ffc36a;
+  --color-acento-claro: #ffd28e;
+  --color-borde: rgb(159 184 214 / 24%);
+  --color-borde-suave: rgb(159 184 214 / 13%);
 
-  /* espacios */
+  /* Escala de separación reutilizada entre elementos. */
   --espacio-1: 0.25rem;
   --espacio-2: 0.5rem;
   --espacio-3: 1rem;
   --espacio-4: 1.5rem;
   --espacio-5: 2rem;
 
-  /* tipografía */
+  /* Tamaños y familia tipográfica de la interfaz. */
   --texto-pequeno: 0.875rem;
   --texto-base: 1rem;
   --texto-medio: 1.25rem;
   --texto-grande: 1.5625rem;
   --fuente-base: system-ui, sans-serif;
 
-  /* componentes */
-  --radio-card: 0.75rem;
+  /* Valores comunes para componentes como las tarjetas. */
+  --radio-card: 1rem;
 }
